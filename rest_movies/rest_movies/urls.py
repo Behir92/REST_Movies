@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from movies.views import MovieView, MoviesView
+from movies.views import MovieView, MoviesView, PeopleView, PersonView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^movies$', MoviesView.as_view(), name='movies'),
-    url(r'^movies/(?P<id>(\d+))$', MovieView.as_view(), name="movie")
+    url(r'^movies/(?P<id>(\d+))$', MovieView.as_view(), name="movie"),
+    url(r'^people$', PeopleView.as_view(), name='people'),
+    url(r'^people/(?P<id>(\d+))$', PersonView.as_view(), name="person")
 ]
