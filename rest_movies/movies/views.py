@@ -17,6 +17,13 @@ class MoviesView(APIView):
         serializer = MovieSerializer(movies, many=True, context={"request": request})
         return Response(serializer.data)
 
+    def post(self, request):
+        serializer = MovieSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+
 
 class MovieView(APIView):
 
@@ -39,6 +46,44 @@ class MovieView(APIView):
     def put(self, request, id):
         movie = self.get_object(id)
         serializer = MovieSerializer(movie, data = request.data, context={"request": request})
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+class PeopleView(APIView):
+
+    def get(self, request):
+        people = Person.objects.all()
+        serializer = PersonSerializer(people, many=True, context={"request": request})
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = PersonSerializer(data=request.data, context={"request": request})
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+
+class PersonView(APIView):
+
+    def get_object(self, id):
+        try:
+            return Person.objects.get(pk=id)
+        except Movie.DoesNotExist:
+            raise Http404
+
+    def get(self, request, id):
+        person = self.get_object(id)
+        serializer = PersonSerializer(person, context={"request": request})
+        return Response(serializer.data)
+
+    def delete(self, request, id):
+        person = self.get_object(id)
+        person.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, id):
+        person = self.get_object(id)
+        serializer = PersonSerializer(person, data=request.data, context={"request": request})
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)
